@@ -30,18 +30,60 @@ function auth(req, res, next) {
 }
 
 routes.get("/games", auth, async (req, res) => {
+  const HATEOAS = [
+    {
+      href: "http://localhost:3333/game/0",
+      method: "DELETE",
+      rel: "delete_game",
+    },
+    {
+      href: "http://localhost:3333/game/0",
+      method: "GET",
+      rel: "get_game",
+    },
+    {
+      href: "http://localhost:3333/auth",
+      method: "POST",
+      rel: "login",
+    },
+  ];
+
   const data = await games.findAll();
-  res.json(data).status(200);
+  res.json({ games: data, _links: HATEOAS }).status(200);
 });
 
 routes.get("/games/:id", auth, async (req, res) => {
   const id = req.params.id;
+
+  const HATEOAS = [
+    {
+      href: `http://localhost:3333/game/${id}`,
+      method: "DELETE",
+      rel: "delete_game",
+    },
+    {
+      href: `http://localhost:3333/game/${id}`,
+      method: "PUT",
+      rel: "edit_game",
+    },
+    {
+      href: `http://localhost:3333/game/${id}`,
+      method: "GET",
+      rel: "get_game",
+    },
+    {
+      href: `http://localhost:3333/game/${id}`,
+      method: "GET",
+      rel: "get_all_games",
+    },
+  ];
+
   if (isNaN(id)) {
     res.sendStatus(400);
   } else {
     if (id !== undefined) {
       const data = await games.findByPk(id);
-      res.json(data).status(200);
+      res.json({ games: data, _links: HATEOAS }).status(200);
     } else {
       res.sendStatus(404);
     }
