@@ -59,6 +59,8 @@ Exemplo de resposta:
 }
 ```
 
+
+
 ### POST /auth
 
 Endpoint responsável por fazer o processo de validação do usuário.
